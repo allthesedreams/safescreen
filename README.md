@@ -16,7 +16,7 @@ requests.
 - Keep the right edge pinned for displays damaged along the left or bottom.
 - Toggle restrictions, switch profiles, or reopen the picker from the tray.
 - Restore the saved area after Explorer or display-layout changes.
-- Start automatically for the current Windows user.
+- Start automatically for the current Windows user, with a tray toggle.
 - Use a compact visual editor as a fallback; no numeric input is required.
 
 Keyboard controls in the full-screen picker:
@@ -29,13 +29,13 @@ Keyboard controls in the full-screen picker:
 
 ## Install
 
-1. Download `SafeScreen-v1.4.0-win-x64.zip` from Releases.
+1. Download `SafeScreen-v1.4.1-win-x64.zip` from Releases.
 2. Extract it into a permanent folder.
 3. Run `SafeScreen.exe --install` once.
 4. Run `SafeScreen.exe`.
 
-Right-click the tray icon for profiles and controls. Double-click it to open
-the full-screen picker.
+Right-click the tray icon for profiles, controls, and the **Start with Windows**
+toggle. Double-click it to open the full-screen picker.
 
 ## Commands
 

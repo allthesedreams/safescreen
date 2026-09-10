@@ -12,7 +12,7 @@ using Microsoft.Win32;
 [assembly: AssemblyDescription("Keeps damaged screen edges outside the Windows work area.")]
 [assembly: AssemblyCompany("AWAKE")]
 [assembly: AssemblyProduct("AWAKE SafeScreen")]
-[assembly: AssemblyVersion("1.4.0.0")]
+[assembly: AssemblyVersion("1.4.1.0")]
 
 namespace Awake.SafeScreen
 {
@@ -448,7 +448,23 @@ namespace Awake.SafeScreen
             return false;
         }
 
-        private static void InstallAutostart()
+        internal static bool IsAutostartEnabled()
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                @"Software\Microsoft\Windows\CurrentVersion\Run"))
+            {
+                if (key == null)
+                {
+                    return false;
+                }
+
+                string current = key.GetValue(SafeScreenSettings.RunValueName) as string;
+                string expected = "\"" + Assembly.GetExecutingAssembly().Location + "\"";
+                return string.Equals(current, expected, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        internal static void InstallAutostart()
         {
             string executable = Assembly.GetExecutingAssembly().Location;
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(
@@ -468,7 +484,7 @@ namespace Awake.SafeScreen
             SafeScreenLog.Write("Autostart installed: " + executable);
         }
 
-        private static void RemoveAutostart()
+        internal static void RemoveAutostart()
         {
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
                 @"Software\Microsoft\Windows\CurrentVersion\Run",
@@ -515,6 +531,7 @@ namespace Awake.SafeScreen
         private readonly System.Windows.Forms.Timer watchdogTimer;
         private readonly NotifyIcon trayIcon;
         private readonly MenuItem enabledMenuItem;
+        private readonly MenuItem autostartMenuItem;
         private readonly MenuItem statusMenuItem;
         private readonly MenuItem customMenuItem;
         private readonly MenuItem[] profileMenuItems;
@@ -588,6 +605,8 @@ namespace Awake.SafeScreen
             trayMenu.MenuItems.Add(customMenuItem);
             trayMenu.MenuItems.Add(new MenuItem("Компактная настройка…", OnShowCompactSettings));
             trayMenu.MenuItems.Add("-");
+            autostartMenuItem = new MenuItem("Запускать вместе с Windows", OnToggleAutostart);
+            trayMenu.MenuItems.Add(autostartMenuItem);
             trayMenu.MenuItems.Add(new MenuItem(
                 "Восстановить область сейчас",
                 delegate { ReRegisterAndPosition(); }));
@@ -617,6 +636,20 @@ namespace Awake.SafeScreen
             GuardSettings updated = settings.Clone();
             updated.Enabled = !settings.Enabled;
             ApplySettings(updated, true);
+        }
+
+        private void OnToggleAutostart(object sender, EventArgs eventArgs)
+        {
+            if (Program.IsAutostartEnabled())
+            {
+                Program.RemoveAutostart();
+            }
+            else
+            {
+                Program.InstallAutostart();
+            }
+
+            UpdateTrayMenu();
         }
 
         private void SelectProfile(int profileIndex)
@@ -711,6 +744,7 @@ namespace Awake.SafeScreen
         private void UpdateTrayMenu()
         {
             enabledMenuItem.Checked = settings.Enabled;
+            autostartMenuItem.Checked = Program.IsAutostartEnabled();
             enabledMenuItem.Text = settings.Enabled
                 ? "Ограничения включены"
                 : "Ограничения выключены";
