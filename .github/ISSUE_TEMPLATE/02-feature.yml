@@ -1,0 +1,40 @@
+name: Feature request
+description: Propose one focused SafeScreen improvement
+title: "[Feature] "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What damaged-screen setup or workflow is difficult today?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: What should SafeScreen let you do?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Smallest useful change
+      description: Describe the narrowest version that would solve the problem.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Product area
+      options:
+        - Full-screen picker
+        - Tray controls
+        - Display and taskbar compatibility
+        - Profiles and settings
+        - Installation and updates
+        - Other
+    validations:
+      required: true

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: SafeScreen support guide
+    url: https://github.com/allthesedreams/safescreen/blob/main/SUPPORT.md
+    about: Check the known limits and diagnostic details before opening an issue.
