@@ -1,0 +1,6 @@
+SafeScreen.exe
+SafeScreen.log
+SafeScreen.v*.exe
+SafeScreen-*-backup.exe
+*.zip
+artifacts/
